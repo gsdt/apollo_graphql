@@ -2,27 +2,39 @@
 module.exports = {
   Query: {
     todoes: (_, __, {dataSources}) => {
-      return dataSources.todoAPI.data
+      const todoes = dataSources.todoDB.findAll();
+      return todoes;
     },
-    todo: (_, {id}, {dataSources}) => {
-      return dataSources.todoAPI.data.find(todo => todo.id === id)
+    todo: async (_, {id}, {dataSources}) => {
+      const todo = await dataSources.todoDB.findOne({
+        where: {
+          id: id
+        }
+      })
+      if(todo) return todo;
+      throw new Error("not_found")
     }
   },
 
   Mutation: {
-    add: (_, {content}, {dataSources}) => {
-      dataSources.todoAPI.counter ++;
-      const todo = {
-        id: dataSources.todoAPI.counter,
+    add: async (_, {content}, {dataSources}) => {
+      todo = dataSources.todoDB
+      const new_todo = await todo.create({
         content: content,
         completed: false
-      }
-      dataSources.todoAPI.data.push(todo)
-      return todo;
+      });
+      return new_todo;
     },
 
-    remove: (_, {id}, {dataSources}) => {
-      return dataSources.todoAPI.data = dataSources.todoAPI.data.filter(todo => todo.id != id);
+    remove: async (_, {id}, {dataSources}) => {
+      const todo  = dataSources.todoDB;
+      await todo.destroy({
+        where: {
+          id: id
+        }
+      });
+      const todoes = await todo.findAll();
+      return todoes;
     }
   }
 }

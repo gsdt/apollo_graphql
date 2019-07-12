@@ -1,7 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
-
+const {Todo} = require('./db')
 let todoDatabase = {
   counter: 2,
   data: [
@@ -22,7 +22,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources: () => ({
-    todoAPI: todoDatabase
+    todoDB: Todo
   })
 });
 
