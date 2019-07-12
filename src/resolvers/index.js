@@ -35,6 +35,28 @@ module.exports = {
       });
       const todoes = await todo.findAll();
       return todoes;
+    },
+
+    edit: async(_, {id, content, completed}, {dataSources}) => {
+      const todo = {
+        content,
+        completed
+      }
+      Object.keys(todo).forEach(key => todo[key] === undefined && delete todo[key])
+      
+      const data = dataSources.todoDB.findOne({
+        where: {
+          id: id
+        }
+      }).then(obj => {
+        if(!obj) {
+          throw new Error("not_found")
+        }
+        obj.update(todo)
+        return obj;
+      })
+
+      return data;
     }
   }
 }
