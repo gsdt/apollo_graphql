@@ -10,7 +10,7 @@
     "koa-graphql": "^0.8.0",
     "koa-mount": "^4.0.0",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.10.0"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {},
   "scripts": {
